@@ -5,7 +5,7 @@ Changed Files
 
 ## node behavior_convtroller.cpp
 
-2. mux index, button index, key index 변수 추가
+1. pure pursuit - mux index, button index, key index 변수 추가
 BehaviorController privat 내부
 
 ```c++
@@ -63,4 +63,23 @@ BehaviorController privat 내부
         n.getParam("random_walk_key_char", random_walk_key_char);
         // Add pure pursuit
         n.getParam("pure_pursuit_key_char", pure_pursuit_key_char);
+```
+3. joy_callback 함수와 key_callback함수 마지막에 else if 문으로 변경하고, new를 pure_pursuit으로 변경(기존코드에 주석처리되어있는부분)
+
+joy_callback()
+```c++
+        // ***Add new else if statement here for new planning method***
+        else if (msg.buttons[pure_pursuit_button_idx]) {
+            // new planner
+            toggle_mux(pure_pursuit_mux_idx, "Pure_pursuit Planner");
+        }
+```
+
+key_callback()
+```c++
+        // ***Add new else if statement here for new planning method***
+        else if (msg.data == pure_pursuit_key_char) {
+            // new planner
+            toggle_mux(pure_pursuit_mux_idx, "Pure_pursuit Planner");
+        }
 ```
