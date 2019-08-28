@@ -7,7 +7,7 @@ Changed File
 
 1. mux index, button index, key index 변수 추가
 
-'''c++
+```c++
     // Mux indices
     int joy_mux_idx;
     int key_mux_idx;
@@ -35,4 +35,4 @@ Changed File
     std::string random_walk_key_char;
     // Add pure pursuit key inx
     std::string pure_pursuit_key_char;
-'''
+```
