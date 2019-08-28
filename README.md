@@ -3,6 +3,25 @@ racecar simulator changed files
 
 Changed Files
 
+## params.yaml
+
+- ```mux_size``` 변경
+- ```pure_pursuit_mux_idx``` 추가
+- ```pure_pursuit_button_idx``` 추가
+- ```pure_pursuit_key_char``` 추가
+- ```pure_pursuit_drive_topic``` 추가
+
+쭉 읽어보면서 어디에추가해야는지 확인하고 추가하기
+위에는 시뮬레이션과 pure_pursuit node를 연결하기 위한 작업
+  
+particle filter에 pose와 odom data를 연결시키기위해 토픽 이름 변경 필요
+```yaml
+pose_topic: "/vesc/pose"  #/pose
+odom_topic: "/vesc/odom"  #/odom
+```
+
+
+
 ## node behavior_convtroller.cpp
 
 1. pure pursuit - mux index, button index, key index 변수 추가
@@ -38,6 +57,7 @@ BehaviorController privat 내부
     std::string pure_pursuit_key_char;
 ```
 
+  
 2. BehaviorController 생성자에서 위에 추가한 index들 파라미터에서 읽어오기
 ```c++
         // Get mux indices
@@ -66,6 +86,7 @@ BehaviorController privat 내부
 ```
 3. joy_callback 함수와 key_callback함수 마지막에 else if 문으로 변경하고, new를 pure_pursuit으로 변경(기존코드에 주석처리되어있는부분)
 
+  
 joy_callback()
 ```c++
         // ***Add new else if statement here for new planning method***
@@ -75,6 +96,7 @@ joy_callback()
         }
 ```
 
+  
 key_callback()
 ```c++
         // ***Add new else if statement here for new planning method***
