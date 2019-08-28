@@ -1,7 +1,11 @@
 # racecar_simulator_changed_files
 racecar simulator changed files
+시뮬레이터 깃 링크 : https://github.com/mlab-upenn/racecar_simulator  
+시뮬레이션 코드 구조등은 링크 글 참고
+***
 
-Changed Files
+Changed Files  
+올려둔 수정된 파일과 같이 확인하며 비교, 수정  
 
 ## params.yaml
 
@@ -11,8 +15,16 @@ Changed Files
 - ```pure_pursuit_key_char``` 추가
 - ```pure_pursuit_drive_topic``` 추가
 
-쭉 읽어보면서 어디에추가해야는지 확인하고 추가하기
-위에는 시뮬레이션과 pure_pursuit node를 연결하기 위한 작업
+쭉 읽어보면서 어디에추가해야는지 확인하고 추가하기  
+위에는 시뮬레이션과 pure_pursuit node를 연결하기 위한 작업  
+업로드한 파일에서
+```yaml
+pure_pursuit_button_idx: 7
+```
+과 같이 설정해두었는데 7 은 RT버튼  
+이 버튼을 누르면 pure pursuit 노드에서 오는 데이터로 주행  
+자세한 내용은 시뮬레이터 깃헙 글과, 코드 참고
+  
   
 particle filter에 pose와 odom data를 연결시키기위해 토픽 이름 변경 필요
 ```yaml
@@ -56,7 +68,7 @@ BehaviorController privat 내부
     // Add pure pursuit key inx
     std::string pure_pursuit_key_char;
 ```
-
+  
   
 2. BehaviorController 생성자에서 위에 추가한 index들 파라미터에서 읽어오기
 ```c++
@@ -84,8 +96,10 @@ BehaviorController privat 내부
         // Add pure pursuit
         n.getParam("pure_pursuit_key_char", pure_pursuit_key_char);
 ```
+  
+  
 3. joy_callback 함수와 key_callback함수 마지막에 else if 문으로 변경하고, new를 pure_pursuit으로 변경(기존코드에 주석처리되어있는부분)
-
+  
   
 joy_callback()
 ```c++
@@ -95,7 +109,7 @@ joy_callback()
             toggle_mux(pure_pursuit_mux_idx, "Pure_pursuit Planner");
         }
 ```
-
+  
   
 key_callback()
 ```c++
@@ -104,4 +118,18 @@ key_callback()
             // new planner
             toggle_mux(pure_pursuit_mux_idx, "Pure_pursuit Planner");
         }
+```
+  
+  
+## mux.cpp
+
+mux 생성자 안에 channel 추가해주기 (주석처리만 지워주고 ```new_*``` 대신 ```pure_pursuit_*```로 변경 ```rosparam```  이름은 ```params.yaml```에서 설정한 이름으로)
+
+```c++
+        // ***Add a channel for a new planner here**
+        int pure_pursuit_mux_idx;
+        std::string pure_pursuit_drive_topic;
+        n.getParam("pure_pursuit_drive_topic", pure_pursuit_drive_topic);
+        n.getParam("pure_pursuit_mux_idx", pure_pursuit_mux_idx);
+        add_channel(pure_pursuit_drive_topic, drive_topic, pure_pursuit_mux_idx);
 ```
